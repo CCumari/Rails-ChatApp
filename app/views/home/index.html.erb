@@ -1,0 +1,55 @@
+<div class="ui container" style="margin-top: 50px;">
+  <div class="ui text container">
+    <h1 class="ui header center aligned">
+      <i class="chat icon"></i>
+      Welcome to Rails Chat
+    </h1>
+    
+    <div class="ui placeholder segment">
+      <div class="ui two column very relaxed stackable grid">
+        <div class="column">
+          <div class="ui form">
+            <div class="field">
+              <label>Get Started</label>
+              <div class="ui left icon input">
+                <i class="user icon"></i>
+                <input type="text" placeholder="Enter your username...">
+              </div>
+            </div>
+            <%= link_to login_path, class: "ui primary button fluid" do %>
+              <i class="sign in icon"></i>
+              Join Chat
+            <% end %>
+          </div>
+        </div>
+        <div class="middle aligned column">
+          <div class="ui big text">
+            <h2 class="ui header">
+              <div class="content">
+                Real-time Chat Application
+                <div class="sub header">Connect with others instantly</div>
+              </div>
+            </h2>
+            <div class="ui list">
+              <div class="item">
+                <i class="check circle icon"></i>
+                <div class="content">Instant messaging</div>
+              </div>
+              <div class="item">
+                <i class="check circle icon"></i>
+                <div class="content">Group chats</div>
+              </div>
+              <div class="item">
+                <i class="check circle icon"></i>
+                <div class="content">Easy to use</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ui vertical divider">
+        Or
+      </div>
+    </div>
+  </div>
+</div>
