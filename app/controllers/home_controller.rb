@@ -1,7 +1,6 @@
 class HomeController < ApplicationController
 
   def index
-    # This action will render the home page of the application.
-    # You can add any logic here that you want to execute when the home page is accessed.
+    redirect_to chat_path if logged_in?
   end
 end

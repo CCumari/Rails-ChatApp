@@ -1,0 +1,16 @@
+<div class="event message-item" data-message-id="<%= messages.id %>">
+  <div class="label">
+    <i class="user circle icon"></i>
+  </div>
+  <div class="content">
+    <div class="summary">
+      <strong><%= messages.user.username %></strong>
+      <div class="date">
+        <%= messages.formatted_time %>
+      </div>
+    </div>
+    <div class="extra text">
+      <%= simple_format(h(messages.content), {}, wrapper_tag: "span") %>
+    </div>
+  </div>
+</div>

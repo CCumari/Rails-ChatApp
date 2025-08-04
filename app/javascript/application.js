@@ -2,3 +2,4 @@
 import "@hotwired/turbo-rails"
 
 // Custom JavaScript initialization can go here
+import "channels"

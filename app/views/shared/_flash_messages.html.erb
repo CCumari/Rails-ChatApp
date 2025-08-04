@@ -1,0 +1,18 @@
+<% flash.each do |type, message| %>
+  <% 
+    message_class = case type
+                   when 'success'
+                     'ui positive message'
+                   when 'error'
+                     'ui negative message'
+                   else
+                     'ui info message'
+                   end
+  %>
+  <div class="<%= message_class %>">
+    <i class="close icon"></i>
+    <div class="header">
+      <%= message %>
+    </div>
+  </div>
+<% end %>

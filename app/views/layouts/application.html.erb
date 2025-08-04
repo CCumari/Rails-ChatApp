@@ -8,6 +8,7 @@
     <meta charset="utf-8">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+    <meta name="action-cable-url" content="/cable" />
 
     <%= yield :head %>
 
@@ -24,10 +25,21 @@
     <%# Include JavaScript dependencies %>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
-    <%= javascript_include_tag "application" %>
+    
+    <%# Include importmap for Rails 7+ JavaScript modules %>
+    <%= javascript_importmap_tags %>
+    
+    <%# Legacy JavaScript include (for Rails < 7 compatibility) %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
   </head>
 
   <body>
+    <%= render 'shared/navigation' %>
+    
+    <div class="ui container" style="margin-top: 20px;">
+      <%= render 'shared/flash_messages' %>
+    </div>
+    
     <%= yield %>
 
     <%# Initialize Semantic UI components %>
@@ -35,6 +47,9 @@
       document.addEventListener('turbo:load', function() {
         $('.ui.dropdown').dropdown();
         $('.ui.modal').modal();
+        $('.message .close').on('click', function() {
+          $(this).closest('.message').transition('fade');
+        });
       });
     </script>
   </body>

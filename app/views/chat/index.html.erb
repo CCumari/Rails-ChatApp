@@ -1,0 +1,130 @@
+<div class="ui container" style="margin-top: 80px;">
+  <div class="ui grid">
+    <div class="sixteen wide column">
+      <div class="ui raised segment">
+        <h2 class="ui header">
+          <i class="comments icon"></i>
+          <div class="content">
+            Chat Room
+            <div class="sub header">Welcome <%= current_user.username %>! Start chatting below.</div>
+          </div>
+        </h2>
+        
+        <!-- Messages Container -->
+        <div class="ui segment" style="height: 400px; overflow-y: auto;" id="messages-container">
+          <div class="ui feed" id="messages">
+            <%= render @messages %>
+          </div>
+        </div>
+        
+        <!-- Message Form -->
+        <%= form_with model: @message, url: chat_path, local: false, 
+                      class: "ui form", id: "message-form" do |f| %>
+          <div class="ui action input fluid">
+            <%= f.text_area :content, placeholder: "Type your message here...", 
+                           rows: 1, style: "resize: none;", id: "message-input" %>
+            <button type="submit" class="ui teal labeled icon button">
+              <i class="paper plane icon"></i>
+              Send
+            </button>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  console.log("🚀 Chat page loaded");
+  
+  const messagesContainer = document.getElementById('messages-container');
+  const messageForm = document.getElementById('message-form');
+  const messageInput = document.getElementById('message-input');
+  
+  // Auto-scroll to bottom function
+  function scrollToBottom() {
+    if (messagesContainer) {
+      messagesContainer.scrollTo({
+        top: messagesContainer.scrollHeight,
+        behavior: 'smooth'
+      });
+    }
+  }
+  
+  // Initial scroll to bottom
+  setTimeout(scrollToBottom, 100);
+  
+  // Handle form submission
+  messageForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    console.log("📤 Submitting message...");
+    
+    const formData = new FormData(messageForm);
+    const content = formData.get('message[content]').trim();
+    
+    if (content === '') {
+      console.log("❌ Empty message, not sending");
+      return;
+    }
+    
+    // Disable submit button temporarily
+    const submitButton = messageForm.querySelector('button[type="submit"]');
+    submitButton.disabled = true;
+    
+    fetch('<%= chat_path %>', {
+      method: 'POST',
+      headers: {
+        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content,
+        'Accept': 'application/json'
+      },
+      body: formData
+    }).then(response => {
+      console.log("📡 Server response:", response.status);
+      if (response.ok) {
+        messageInput.value = '';
+        messageInput.focus();
+        console.log("✅ Message sent successfully");
+      } else {
+        console.log("❌ Failed to send message");
+      }
+    }).catch(error => {
+      console.error("❌ Error sending message:", error);
+    }).finally(() => {
+      submitButton.disabled = false;
+    });
+  });
+  
+  // Handle Enter key (but allow Shift+Enter for new lines)
+  messageInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      messageForm.dispatchEvent(new Event('submit'));
+    }
+  });
+  
+  // Focus on message input
+  messageInput.focus();
+  
+  // Debug: Log when ActionCable connection is established
+  setTimeout(() => {
+    if (window.chatChannel) {
+      console.log("🔗 ActionCable channel available:", window.chatChannel);
+    } else {
+      console.log("❌ ActionCable channel not available");
+    }
+  }, 1000);
+});
+
+// Also handle Turbo navigation
+document.addEventListener('turbo:load', function() {
+  console.log("🔄 Turbo load event");
+  // Re-scroll to bottom on turbo navigation
+  setTimeout(() => {
+    const container = document.getElementById('messages-container');
+    if (container) {
+      container.scrollTop = container.scrollHeight;
+    }
+  }, 100);
+});
+</script>
